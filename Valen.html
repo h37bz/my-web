@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+    body {
+        font-family: 'Arial', sans-serif;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #ffeef8 0%, #ffe0f0 100%);
+        overflow: hidden;
+    }
+
+    .container {
+        text-align: center;
+        padding: 40px;
+        background: white;
+        border-radius: 30px;
+        box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+        max-width: 500px;
+        position: relative;
+    }
+
+    h1 {
+        color: #ff1493;
+        font-size: 2.5em;
+        margin-bottom: 30px;
+        animation: heartbeat 1.5s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+        0%, 100% { transform: scale(1); }
+        25% { transform: scale(1.05); }
+    }
+
+    .question {
+        font-size: 1.3em;
+        color: #555;
+        margin-bottom: 40px;
+    }
+
+    .buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        min-height: 80px;
+        position: relative;
+    }
+
+    button {
+        padding: 15px 40px;
+        font-size: 1.2em;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        font-weight: bold;
+    }
+
+    .yes-btn {
+        background: linear-gradient(135deg, #ff1493, #ff69b4);
+        color: white;
+        box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
+    }
+
+    .yes-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 20, 147, 0.6);
+    }
+
+    .yes-btn:active {
+        transform: translateY(0);
+    }
+
+    .no-btn {
+        background: linear-gradient(135deg, #ddd, #f0f0f0);
+        color: #666;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        position: absolute;
+        transition: none;
+    }
+
+    /* Confirmation Page Styles */
+    .confirmation {
+        display: none;
+        text-align: center;
+        animation: fadeIn 1s ease-in;
+    }
+
+    .confirmation.active {
+        display: block;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .confirmation h1 {
+        color: #ff1493;
+        font-size: 3em;
+        margin-bottom: 20px;
+    }
+
+    .confirmation p {
+        font-size: 1.5em;
+        color: #555;
+        margin-bottom: 30px;
+    }
+
+    .flowers {
+        font-size: 4em;
+        margin: 20px 0;
+        animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+
+    .heart-rain {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 1000;
+    }
+
+    .heart {
+        position: absolute;
+        font-size: 20px;
+        animation: fall linear infinite;
+        opacity: 0.7;
+    }
+
+    @keyframes fall {
+        to {
+            transform: translateY(100vh) rotate(360deg);
+        }
+    }
+</style>
+
+
+</head>
+<body>
+    <div class="container">
+        <div class="question-page">
+            <h1>💖 Will You Be My Valentine? 💖</h1>
+            <p class="question">I have something important to ask you...</p>
+            <div class="buttons">
+                <button class="yes-btn" onclick="showConfirmation()">Yes! 💕</button>
+                <button class="no-btn" id="noBtn">No</button>
+            </div>
+        </div>
+
+```
+    <div class="confirmation">
+        <h1>🎉 Yay! 🎉</h1>
+        <p>You've made me the happiest person!</p>
+        <div class="flowers">
+            🌹🌷🌺🌸🌼
+        </div>
+        <div class="flowers">
+            💐🌻🏵️🌹🌷
+        </div>
+        <p style="font-size: 1.2em; margin-top: 20px;">Happy Valentine's Day! 💝</p>
+    </div>
+</div>
+
+<div class="heart-rain" id="heartRain"></div>
+
+<script>
+    const noBtn = document.getElementById('noBtn');
+    const container = document.querySelector('.container');
+    
+    // Set initial position
+    noBtn.style.left = '60%';
+    noBtn.style.top = '50%';
+
+    noBtn.addEventListener('mousemove', function(e) {
+        const btnRect = noBtn.getBoundingClientRect();
+        const btnCenterX = btnRect.left + btnRect.width / 2;
+        const btnCenterY = btnRect.top + btnRect.height / 2;
+        
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        
+        const distanceX = mouseX - btnCenterX;
+        const distanceY = mouseY - btnCenterY;
+        const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+        
+        // If mouse is within 100px, move the button away
+        if (distance < 100) {
+            const containerRect = container.getBoundingClientRect();
+            
+            // Calculate new position (move away from mouse)
+            let newX = btnCenterX - distanceX * 2;
+            let newY = btnCenterY - distanceY * 2;
+            
+            // Keep button within container bounds
+            const maxX = containerRect.width - btnRect.width;
+            const maxY = containerRect.height - btnRect.height;
+            
+            newX = Math.max(0, Math.min(newX - containerRect.left, maxX));
+            newY = Math.max(0, Math.min(newY - containerRect.top, maxY));
+            
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+        }
+    });
+
+    function showConfirmation() {
+        document.querySelector('.question-page').style.display = 'none';
+        document.querySelector('.confirmation').classList.add('active');
+        createHeartRain();
+    }
+
+    function createHeartRain() {
+        const heartRain = document.getElementById('heartRain');
+        const hearts = ['❤️', '💕', '💖', '💗', '💝', '💘'];
+        
+        for (let i = 0; i < 30; i++) {
+            setTimeout(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                heart.style.left = Math.random() * 100 + '%';
+                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                heart.style.animationDelay = Math.random() * 2 + 's';
+                heartRain.appendChild(heart);
+                
+                setTimeout(() => heart.remove(), 5000);
+            }, i * 100);
+        }
+    }
+</script>
+
+
+</body>
+</html>
